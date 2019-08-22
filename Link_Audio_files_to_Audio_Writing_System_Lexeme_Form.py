@@ -23,7 +23,7 @@ from SIL.FieldWorks.Common.COMInterfaces import ITsString
 #----------------------------------------------------------------
 # Documentation that the user sees:
 
-docs = {FTM_Name        : "Insert Audio Pronunciation Files to Lexeme Form final",
+docs = {FTM_Name        : "Link Audio files to Lexeme Form Audio Writing System.",
         FTM_Version     : 1,
         FTM_ModifiesDB  : True,
         FTM_Synopsis    : "Links Audio files to Lexeme Form Audio Writing System.",
@@ -32,7 +32,7 @@ u"""
 This script links existing audio files (pronunciations) to their corresponding lexeme forms in the audio variant writing systems field. 
 It assumes that the audio variant writing system has already been created, if not, the script will stop and prompt you to create it. 
 The files must be in .wav format and named as their corresponding headwords. You can run this script multiple times safely, 
-it checks if entries already have a linked file. See Fieldworks help    topics for more information about
+it checks if entries already have a linked file. See Fieldworks help topics for more information about
 how to create a variant audio writing system or further information about pronuncations and audio files:
 Audio files overview, Writing System Properties overview (how to add Audio Writing System)
 """ }
