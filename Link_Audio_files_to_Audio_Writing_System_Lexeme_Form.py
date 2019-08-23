@@ -43,7 +43,7 @@ Audio files overview, Writing System Properties overview (how to add Audio Writi
 def MainFunction(DB, report, modifyAllowed):
 
     #edit this variable with the filesystem folder location of the Audio files, keep the "r" and single quotes
-    FOLDER = r'C:\ProgramData\SIL\FieldWorks\Projects\turkishaudiotest\LinkedFiles\AudioVisual'
+    FOLDER = r''
 
     #------ check existence of FOLDER variable ------#
     if FOLDER == '': report.Info(u"Location of Audio files has not been set. Please add folder location path to FOLDER variable in script. Exiting...")
