@@ -13,6 +13,7 @@
 
 import os, os.path   #for os.walk method
 import unicodedata
+import shutil
 
 from FTModuleClass import *
 
@@ -43,13 +44,17 @@ Audio files overview, Writing System Properties overview (how to add Audio Writi
 def MainFunction(DB, report, modifyAllowed):
 
     #edit this variable with the filesystem folder location of the Audio files, keep the "r" and single quotes
-    FOLDER = r''
+    FOLDER = r'C:\Users\family\Downloads\wavfiles'
+
+    #finds location of LinkedFiles folder of current project
+    audioVisualDir = os.path.join(DB.lp.LinkedFilesRootDir, 'AudioVisual')
 
     #------ check existence of FOLDER variable ------#
     if FOLDER == '': report.Info(u"Location of Audio files has not been set. Please add folder location path to FOLDER variable in script. Exiting...")
     report.Blank()    
     if FOLDER != '':
         report.Info(u"Folder containing audio files is: %s" % FOLDER)
+        report.Info(u"Project's LinkedFiles folder is at: %s" % audioVisualDir)	
     
         #------ create python lists to map audio and non-audio files in FOLDER ------#
         wavAudioFiles = []
@@ -89,23 +94,25 @@ def MainFunction(DB, report, modifyAllowed):
             #------ checking to see if headword from audio file exists in lexicon ------#            
             for filename in wavAudioFiles:
                 if filename not in headwords:
-                    report.Info(u"%s headword from audio filename was not found in lexicon, skipping..." % (filename))
+                    report.Info(u"    %s headword from audio filename was not found in lexicon, skipping..." % (filename))
                 else:
                     #------ checking to see if something is already set/attached to entry ------#
                     lexEntry = headwords.get(filename)  
-                    audioFilename = filename + ".wav"    
+                    audioFilename = unicodedata.normalize('NFC', 
+                                                      filename) + ".wav"    
                     lexEntryValue = ITsString(lexEntry.LexemeFormOA.Form.get_String(audioHandle)).Text                    
                     if lexEntryValue is not None:
-                        report.Info(u"%s audio file is already linked to %s headword, skipping..." % (lexEntryValue,filename))
+                        report.Info(u"    %s audio file is already linked to %s headword, skipping..." % (lexEntryValue,filename))
                     else:                        
-                        #------ setting/attaching audiofilename to entry ------#
-                        report.Info(u"Attaching %s audio file to headword %s" % (audioFilename,filename))
+                        #------ setting/attaching audioFilename to entry ------#
+                        report.Info(u"%s audio file attached to headword %s" % (audioFilename,filename))
                         if modifyAllowed:
+			    shutil.copy2(os.path.join(FOLDER, audioFilename), audioVisualDir) #os.path.join ensures that trailing slash is added
                             lexForm = lexEntry.LexemeFormOA                                            
                             mkstr = DB.db.TsStrFactory.MakeString(audioFilename, audioHandle) 
                             lexForm.Form.set_String(audioHandle, mkstr)
                         else:
-                            report.Info(">>Use Run (Modify) to make the change.")
+                            report.Info("        >>Use Run (Modify) to make the change.")
     report.Blank()        
 
 #----------------------------------------------------------------
@@ -117,4 +124,3 @@ FlexToolsModule = FlexToolsModuleClass(runFunction = MainFunction,
 #----------------------------------------------------------------
 if __name__ == '__main__':
     FlexToolsModule.Help()
-    
